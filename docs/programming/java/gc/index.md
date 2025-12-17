@@ -231,14 +231,66 @@ G1 在后台维护了一个优先级队列，根据每个区域的垃圾回收�
 
 使用的算法策略：**新生代和老年代均采用复制算法**，使用方式`-XX:+UseG1GC`。
 
-> 在 Java 9 及之后版本，G1 GC 成为默认的垃圾收集器。
+> G1 调优 Checklist ，在 Java 9 成为默认。
 
+
+
+- 固定堆大小（-Xms = -Xmx）
+- 设置 -XX:MaxGCPauseMillis（根据业务容忍度）
+- 监控 Full GC，避免出现
+- 调整 InitiatingHeapOccupancyPercent 防并发失败
+- 处理大对象（调整 G1HeapRegionSize）
+- 开启 GC 日志，定期分析
+
+场景 1：频繁 Full GC
+原因：并发标记太晚 or 大对象太多 or 堆太小
+对策：
+```bash
+-XX:InitiatingHeapOccupancyPercent=35
+-XX:G1HeapRegionSize=16m   # 减少 Humongous 对象
+-Xmx16g                    # 增大堆
+```
+场景 2：Young GC 停顿超 200ms
+原因：Young 区太大 or 对象存活率高
+对策：
+```bash
+-XX:MaxGCPauseMillis=100   # 降低目标，G1 会自动缩小 Young 区
+-XX:G1NewSizePercent=10    # 最小 Young 区占比（默认 5%）
+-XX:G1MaxNewSizePercent=30 # 最大 Young 区占比（默认 60%）
+```
 ### 5.6.ZGC 垃圾收集器
 
 **ZGC（Z Garbage Collector）** 是一个可扩展的低延迟垃圾收集器，旨在处理大规模堆内存（从几 GB 到几 TB），并将垃圾回收停顿时间控制在毫秒级别。
 
-ZGC 采用了**标记-复制算法**和**染色指针算法**，感兴趣可以自行查阅相关资料，使用方式`-XX:+UseZGC`。
+ZGC 采用了**标记-复制算法**和**染色指针算法**，使用方式`-XX:+UseZGC`。
 
-> 在 Java 11 引入，在 Java 15 可以正式使用。
->
-> 在 Java 21 引入了分代 ZGC，使用方式 `java -XX:+UseZGC -XX:+ZGenerational`
+ZGC：64 位指针中嵌入元数据（利用虚拟地址空间富裕）
+保留 42 位用于寻址（支持 4TB 堆）
+高位用作“颜色标记”（metadata bits）
+
+指针颜色位	含义
+
+- Marked0 / Marked1	对象是否存活（用于标记阶段）
+- Remapped	对象是否已重定位（Relocated）
+- Finalizable	是否需 finalize
+> 优势：无需额外的“转发指针表”或“对象头标记”，GC 线程可直接通过指针判断状态。在 Java 15 可以正式使用,在 Java 21 引入了分代 ZGC
+![img.png](img.png)
+
+堆被划分为 大、中、小三种 Region（默认 2MB/32MB/...）
+
+JDK 21+ 的分代 ZGC 可显著降低 GC 频率和 CPU 开销（适合大多数应用）。
+
+**场景 1：CPU 使用率过高（>80%）**
+
+原因：并发 GC 线程太多
+
+对策： -XX:ConcGCThreads=2
+
+**场景 2：GC 频率太高（每秒 >10 次）**
+
+原因：堆太小 or 内存泄漏
+
+对策：
+增大堆（ZGC 在大堆下 GC 频率更低）
+检查内存泄漏（用 jmap + MAT）
+升级到 JDK 21+ 启用分代 ZGC

@@ -4,7 +4,7 @@ layout: home
 hero:
   name: 锦还
   text: 你比从前快乐
-  tagline: "很高兴认识你，我是一名喜欢研究投资的程序员。"
+  tagline: "很高兴认识你，我是一名喜欢折腾的程序员。"
   actions:
     - theme: brand
       text: cjxetf@163.com

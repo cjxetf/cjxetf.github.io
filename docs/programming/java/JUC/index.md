@@ -3,6 +3,12 @@
 ## CountDownLatch、CyclicBarrier、Semaphore、Phaser
 ![img_1.png](img_1.png)
 
+## ConcurrentHashMap 统计元素总数
+采用「基础计数 + 分段计数」的方案：
+- baseCount：基础计数器，低并发时通过 CAS 直接修改，效率高；
+- CounterCell[]：分段计数器，高并发时若 CAS 修改 baseCount 失败，会创建 CounterCell 数组，将计数分散到不同的 Cell 中，避免竞争；
+- size() 计算：遍历 baseCount + 所有 CounterCell 的值，求和得到总元素数
+
 ## ConcurrentHashMap 扩容
 
 ### 触发扩容的条件

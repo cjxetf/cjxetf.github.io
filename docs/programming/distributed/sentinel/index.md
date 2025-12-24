@@ -98,3 +98,6 @@ Sentinel 的高性能关键在于 无锁滑动窗口统计：
 3. 集群限流（高级功能）
    - Sentinel 提供 Token Server 模式：
    - 所有节点向 Token Server 申请令牌
+
+## 熔断降级规则
+![img.png](img.png)

@@ -256,7 +256,7 @@ const sidebar = {
         collapsed: false,
         items: [
           {
-            text: "LLM 平台对比",
+            text: "开源 LLM 平台对比",
             link: "/platform/",
           },
           {
@@ -272,6 +272,15 @@ const sidebar = {
             link: "/web/",
           },
 
+          {
+            text: "SGLang 与 vLLM 对比分析",
+            link: "/vllm/",
+          },
+
+          {
+            text: "特征查询中心",
+            link: "/invoker/",
+          }
 
         ],
       },
@@ -300,6 +309,10 @@ const sidebar = {
           {
             text: "MCP 技术原理",
             link: "/mcp/",
+          },
+          {
+            text: "instruction prompt 自动优化",
+            link: "/p1/",
           },
         ],
       },

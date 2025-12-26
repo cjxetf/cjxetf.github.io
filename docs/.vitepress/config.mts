@@ -271,15 +271,25 @@ const sidebar = {
             text: "大模型关键参数",
             link: "/web/",
           },
-
           {
             text: "SGLang 与 vLLM 对比分析",
             link: "/vllm/",
           },
-
+          {
+            text: "vLLM 对 PyTorch 的改写",
+            link: "/pyTorch/",
+          },
           {
             text: "特征查询中心",
             link: "/invoker/",
+          },
+          {
+            text: "Flux vs Mono",
+            link: "/flux/",
+          },
+          {
+            text: "虚拟线程 vs 响应式编程",
+            link: "/java21/",
           }
 
         ],
@@ -293,6 +303,14 @@ const sidebar = {
           {
             text: "RAG 系统优化指南",
             link: "/rag/",
+          },
+          {
+            text: "RAG 多层缓存",
+            link: "/rag7/",
+          },
+          {
+            text: "RAG 自动迭代方案",
+            link: "/auto/",
           },
           {
             text: "向量数据库选型",
@@ -311,9 +329,32 @@ const sidebar = {
             link: "/mcp/",
           },
           {
+            text: "MCP Server 缓存设计方案",
+            link: "/mcp1/",
+          },
+          {
             text: "instruction prompt 自动优化",
             link: "/p1/",
           },
+          {
+            text: "多轮对话 LLM 上下文超限优化",
+            link: "/history/",
+          },
+        ],
+      },
+      {
+        text: "Ai Coding",
+        base: "/programming/aicoding/",
+        collapsed: false,
+        items: [
+          {
+            text: "传统编程 vs Vibe Coding",
+            link: "/1/",
+          },
+          {
+            text: "Spec Coding",
+            link: "/2/",
+          }
         ],
       },
       {
@@ -336,6 +377,10 @@ const sidebar = {
           {
             text: "Dify 中 Go 应用模块",
             link: "/d1/",
+          },
+          {
+            text: "Dify 的日志问题",
+            link: "/log/",
           },
         ],
       },

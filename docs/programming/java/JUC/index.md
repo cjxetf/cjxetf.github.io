@@ -74,6 +74,14 @@ table、nextTable、sizeCtl 均为 volatile，确保所有线程看到最新的�
 - sync 锁的是对象，锁信息保存在对象头中；rtl 使用一个int类型的state标识来标记锁的状态
 - sync 底层有锁升级过程；rtl 没有
 
+### ReentrantLock + Condition 是构建高性能、复杂线程协作系统的基石，特别适用于：
+
+- 多条件等待（如生产者-消费者）
+- 精确唤醒（避免 notifyAll 浪费）
+- 顺序控制（A→B→C 执行）
+- 超时/中断敏感 的场景
+- 它提供了比传统 wait/notify 更清晰、更安全、更高效 的线程通信能力
+
 ### 原理
 synchronized是java提供的原子性内置锁，这种内置的并且使用者看不到的锁也被称为监视器锁，使用synchronized之后，会在编译之后在同步的代码块前后加上monitorenter和monitorexit字节码指令，他依赖操作系统底层互斥锁实现。他的作用主要就是实现原子性操作和解决共享变量的内存可见性问题。
 

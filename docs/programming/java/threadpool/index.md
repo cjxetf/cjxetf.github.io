@@ -170,7 +170,6 @@ CompletableFuture.allOf(f1, f2).thenRun(...);
 
 
 
-
 ## Async 注解
 
 
@@ -211,3 +210,9 @@ Restore（还原与清理）：当线程池中的子线程执行任务时，先�
 同时，通过 TtlExecutors 装饰线程池，可以做到对业务代码零侵入，广泛应用于日志链路追踪（如 TraceID 透传）、用户上下文传递等场景。
 
 相比 JDK 自带的 InheritableThreadLocal，TTL 的最大优势是 支持线程池复用场景，而 InheritableThreadLocal 只在新线程创建时继承一次，无法用于线程池
+
+
+## 共享线程池 + CountDownLatch 的 正确使用姿势
+
+![img_4.png](img_4.png)
+

@@ -260,6 +260,10 @@ const sidebar = {
             link: "/platform/",
           },
           {
+            text: "Java LLM 开源框架",
+            link: "/kuajia/",
+          },
+          {
             text: "大模型 API 限流熔断方案",
             link: "/model4/",
           },
@@ -290,6 +294,10 @@ const sidebar = {
           {
             text: "虚拟线程 vs 响应式编程",
             link: "/java21/",
+          },
+          {
+            text: "MLOps vs LLMOps",
+            link: "/mlops/",
           }
 
         ],
@@ -311,6 +319,10 @@ const sidebar = {
           {
             text: "RAG 自动迭代方案",
             link: "/auto/",
+          },
+          {
+            text: "GraphRAG",
+            link: "/graph/",
           },
           {
             text: "向量数据库选型",
@@ -371,6 +383,10 @@ const sidebar = {
             link: "/rag3/",
           },
           {
+            text: "Dify 工作流引擎",
+            link: "/workflow/",
+          },
+          {
             text: "Dify 知识库劣势",
             link: "/rag2/",
           },
@@ -401,6 +417,11 @@ const sidebar = {
             text: "LangGraph 接入 MCP",
             link: "/mcp/",
           },
+          {
+            text: "Langfuse",
+            link: "/langFuse/",
+          },
+
         ],
       },
       {
@@ -493,6 +514,9 @@ const sidebar = {
         collapsed: false,
         items: [
           {
+            text: "Spring",
+            link: "/spring/",
+          },{
             text: "并发",
             link: "/JUC/",
           },{

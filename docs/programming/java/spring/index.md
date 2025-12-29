@@ -211,23 +211,158 @@ spring的事件驱动模型使用的是 观察者模式 ，Spring中Observer模�
 
 ## **为什么要使用三级缓存，二级缓存不能解决吗?**
 
-![](file:////Users/chenjinxiang/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-chenjinxiang/ksohtml//wps4.jpg)
+Spring 采用 三级缓存机制 来解决单例 Bean 之间的循环依赖问题。核心思想是：通过提前暴露一个“半成品”对象，作为循环依赖的出口。
 
-![](file:////Users/chenjinxiang/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-chenjinxiang/ksohtml//wps5.jpg)
+### 三级缓存详解：
 
-Spring 主要通过 三级缓存机制 来解决 单例 Bean 的 setter 注入（属性注入）循环依赖问题。
+1. **一级缓存：`singletonObjects`**
+    * 存放的是​**完整的、初始化完成的单例 Bean**​。
+    * 只有当 Bean 完全创建并初始化后，才会放入此缓存。
+2. **二级缓存：`earlySingletonObjects`**
+    * 存放的是​**早期的 Bean 实例（即“半成品”）**​。
+    * 此时 Bean 已经实例化，但尚未完成属性注入和初始化（如 `@PostConstruct`、AOP 代理等）。
+    * 仅用于在循环依赖中提供一个临时可用的对象引用，避免死循环。
+3. **三级缓存：`singletonFactories`**
+    * 这是​**解决循环依赖的关键出口**​。
+    * 存放的是一个 ​**ObjectFactory 对象工厂**​，用于延迟创建对象，并将其放入二级缓存。
+    * 当需要获取 Bean 时，调用工厂方法创建对象并放入 `earlySingletonObjects`。
+    * 如果该 Bean 需要 AOP 代理，则工厂返回的是代理对象，确保最终拿到的是增强后的对象。
 
-具体来说，Spring 在创建 Bean 时会经历 实例化 → 属性填充 → 初始化 三个阶段。当 A 依赖 B、B 又依赖 A 时：
 
-Spring 先调用 A 的构造方法，得到一个原始对象（尚未注入属性）；
+### 🔍 分步详解（含循环依赖处理）
 
-然后将 A 的 ObjectFactory 工厂 放入三级缓存（singletonFactories）；
+#### 1️⃣ 容器初始化阶段
 
-接着去创建 B，在 B 需要注入 A 时，Spring 会从三级缓存中取出 A 的工厂，提前暴露一个早期引用（可能是原始对象，也可能是 AOP 代理对象）；
+* ​**实例化 Spring 容器**​（`ApplicationContext`）
+* ​**扫描包路径**​，找到所有 `@Component`、`@Service` 等标注的类
+* ​**解析类信息**​，生成 `BeanDefinition` 对象（包含类名、作用域、工厂方法等）
+* 将 `BeanDefinition` 注册到 `beanDefinitionMap` 中（即“放入 map 中”）
 
-这个早期引用会被放入二级缓存（earlySingletonObjects），供后续依赖使用；
+> ⚠️ 此时只是定义，还未创建对象。
 
-最终 A 和 B 都能完成初始化，并放入一级缓存（singletonObjects）。
+---
+
+#### 2️⃣ 创建 Bean 实例（核心步骤）
+
+##### ✅ Step 1：调用构造方法 → 实例化对象
+
+* 调用 `newInstance()` 创建一个原始对象（例如 `MyService obj = new MyService();`）
+* 此时对象是“​**裸对象**​”，还没有注入任何依赖
+
+> 💡 此时对象尚未完成初始化，不能直接使用。
+
+##### ✅ Step 2：放入三级缓存（解决循环依赖的关键）
+
+```
+singletonFactories.put(beanName, () -> {
+    // 返回早期对象（半成品）
+    return earlySingleton;
+});
+```
+
+* **三级缓存 ​`singletonFactories`** 存的是一个 ​**ObjectFactory 工厂**​，用于后续创建“早期对象”
+* 这是​**循环依赖的出口**​！当其他 Bean 需要它时，可以通过工厂拿到一个临时对象
+
+> ✅ 为什么用工厂？
+> 因为可能需要 AOP 代理，所以不能直接放对象，而是放一个“可延迟创建”的工厂。
+
+---
+
+#### 3️⃣ 填充属性（Dependency Injection）
+
+##### ✅ Step 3：填充属性（populateProperties）
+
+* 扫描字段上的 `@Autowired`、`@Value` 等注解
+* 查找依赖的 Bean 是否已创建
+* 如果依赖的 Bean 尚未完成创建：
+    * 会尝试从 **三级缓存** 获取 ObjectFactory
+    * 调用工厂创建一个“​**早期对象**​”并放入 **二级缓存**
+    * 使用这个早期对象进行注入
+
+> 🔁 示例：A 依赖 B，B 又依赖 A
+>
+> * A 创建时，先放入三级缓存
+> * A 注入 B 时，发现 B 未完成 → B 创建时也需 A → 从三级缓存拿 A 的工厂 → 创建 A 的早期对象 → 注入给 B
+> * B 完成后，再回过头来完成 A 的剩余初始化
+
+##### ✅ Step 4：放入二级缓存（earlySingletonObjects）
+
+* 当某个 Bean 的早期对象被创建后，会放入 `earlySingletonObjects`
+* 保证同一个 Bean 不会重复创建多个早期对象
+* 后续请求该 Bean 时，优先从二级缓存取
+
+---
+
+#### 4️⃣ 初始化与增强
+
+##### ✅ Step 5：前置处理器处理（Aware 接口）
+
+* 如 `ApplicationContextAware`、`BeanNameAware` 等接口的回调
+* 设置 `applicationContext`、`beanName` 等属性
+
+##### ✅ Step 6：init() 方法执行
+
+* 执行 `@PostConstruct` 注解的方法
+* 执行 `init-method` 配置的方法
+
+##### ✅ Step 7：后置处理器处理（AOP 代理）
+
+* 如果配置了 AOP，则在此阶段创建代理对象（如 JDK 动态代理或 CGLIB）
+* 代理对象会替代原始对象，作为最终的 Bean
+
+> ✅ 最终返回的 Bean 是经过 AOP 增强后的代理对象！
+
+---
+
+#### 5️⃣ 放入一级缓存（完成）
+
+##### ✅ Step 8：放入一级缓存（singletonObjects）
+
+```
+singletonObjects.put(beanName, finalBean);
+```
+
+* 此时 Bean ​**完全初始化完成**​，可以被外部使用
+* 移除三级缓存和二级缓存中的条目（避免内存泄漏）
+
+---
+
+#### 6️⃣ 应用使用与销毁
+
+##### ✅ Step 9：执行业务逻辑
+
+* 应用程序通过 `@Autowired` 或 `getBean()` 获取 Bean 并使用
+
+##### ✅ Step 10：销毁
+
+* 容器关闭时，调用 `destroy-method` 或 `@PreDestroy` 方法
+* 清理资源（如关闭连接、释放锁等）
+
+---
+
+### 🧩 总结：三级缓存的作用
+
+| 缓存                                           | 作用                             | 存放内容                        |
+| ------------------------------------------------ | ---------------------------------- | --------------------------------- |
+| **一级缓存** `singletonObjects`      | 存放**完整初始化的 Bean**  | 最终可用的 Bean 实例            |
+| **二级缓存** `earlySingletonObjects` | 存放**早期对象（半成品）** | 用于循环依赖注入的临时对象      |
+| **三级缓存** `singletonFactories`    | 存放**对象工厂**           | 用于创建早期对象，支持 AOP 代理 |
+
+> ✅ ​**关键点**​：
+>
+> * **三级缓存是循环依赖的突破口**
+> * **二级缓存是临时对象池​**
+> * **一级缓存是最终产物**
+
+---
+
+### ✅ 补充说明
+
+* ❌ ​**不支持原型（Prototype）Bean 的循环依赖**​：因为原型 Bean 每次都新建，无法提前暴露。
+* ✅ ​**仅对单例（Singleton）有效**​：Spring 默认作用域为单例。
+
+
+
 
 为什么需要三级缓存？
 

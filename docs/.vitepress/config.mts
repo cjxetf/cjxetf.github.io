@@ -462,84 +462,84 @@ const sidebar = {
           }
         ],
       },
-      {
-        text: "数据库",
-        base: "/programming/db/",
-        collapsed: false,
-        items: [
-          {
-            text: "Kafka",
-            link: "/kafka/",
-          },
-          {
-            text: "Redis",
-            link: "/redis/",
-          },
-          {
-            text: "MySQL",
-            link: "/mysql/",
-          },
-          {
-            text: "ES",
-            link: "/es/",
-          },
-        ],
-      },
-      {
-        text: "分布式",
-        base: "/programming/distributed/",
-        collapsed: false,
-        items: [
-            {
-              text: "Sentinel",
-              link: "/sentinel/",
-            },
-          {
-            text: "分布式调度系统",
-            link: "/schedule/",
-          },
-          {
-            text: "分布式事务",
-            link: "/transaction/",
-          },
-          {
-            text: "Seata",
-            link: "/seata/",
-          },
-        ],
-      },
-      {
-        text: "Java",
-        base: "/programming/java/",
-        collapsed: false,
-        items: [
-          {
-            text: "Spring",
-            link: "/spring/",
-          },{
-            text: "并发",
-            link: "/JUC/",
-          },{
-            text: "线程池",
-            link: "/threadpool/",
-          },{
-            text: "JVM",
-            link: "/jvm/",
-          },
-          {
-            text: "GC 垃圾回收",
-            link: "/gc/",
-          },
-          {
-            text: "编译 JDK",
-            link: "/source-code/",
-          },
-          {
-            text: "Netty 入门",
-            link: "/netty/",
-          }
-        ],
-      },
+      // {
+      //   text: "数据库",
+      //   base: "/programming/db/",
+      //   collapsed: false,
+      //   items: [
+      //     {
+      //       text: "Kafka",
+      //       link: "/kafka/",
+      //     },
+      //     {
+      //       text: "Redis",
+      //       link: "/redis/",
+      //     },
+      //     {
+      //       text: "MySQL",
+      //       link: "/mysql/",
+      //     },
+      //     {
+      //       text: "ES",
+      //       link: "/es/",
+      //     },
+      //   ],
+      // },
+      // {
+      //   text: "分布式",
+      //   base: "/programming/distributed/",
+      //   collapsed: false,
+      //   items: [
+      //       {
+      //         text: "Sentinel",
+      //         link: "/sentinel/",
+      //       },
+      //     {
+      //       text: "分布式调度系统",
+      //       link: "/schedule/",
+      //     },
+      //     {
+      //       text: "分布式事务",
+      //       link: "/transaction/",
+      //     },
+      //     {
+      //       text: "Seata",
+      //       link: "/seata/",
+      //     },
+      //   ],
+      // },
+      // {
+      //   text: "Java",
+      //   base: "/programming/java/",
+      //   collapsed: false,
+      //   items: [
+      //     {
+      //       text: "Spring",
+      //       link: "/spring/",
+      //     },{
+      //       text: "并发",
+      //       link: "/JUC/",
+      //     },{
+      //       text: "线程池",
+      //       link: "/threadpool/",
+      //     },{
+      //       text: "JVM",
+      //       link: "/jvm/",
+      //     },
+      //     {
+      //       text: "GC 垃圾回收",
+      //       link: "/gc/",
+      //     },
+      //     {
+      //       text: "编译 JDK",
+      //       link: "/source-code/",
+      //     },
+      //     {
+      //       text: "Netty 入门",
+      //       link: "/netty/",
+      //     }
+      //   ],
+      // },
       {
         text: "围炉夜话",
         base: "/programming/manage/",

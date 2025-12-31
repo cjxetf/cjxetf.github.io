@@ -34,7 +34,7 @@ print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 但原生推理仅适用于小批量、低并发的场景，面对大模型的千亿级参数和高并发服务需求，原生框架的推理效率会出现严重瓶颈。
 
 ## 二、原生 PyTorch/TensorFlow 在大模型推理中的瓶颈
-
+![img.png](img.png)
 PyTorch/TensorFlow 的设计初衷是​**兼顾训练与推理**​，但针对大模型推理的特殊场景，原生框架存在以下核心问题：
 
 ### 1. 显存利用率极低

@@ -1,5 +1,45 @@
 # Kafka
 
+## 集群原理
+![img_2.png](img_2.png)
+
+### 1. **Partition 分布与 Leader 选举**
+
+* 每个 Topic 被分为 N 个 Partition（如 6 个）
+* 每个 Partition 有 **1 个 Leader + 多个 Follower**
+* Partition 均匀分布在不同 Broker 上（避免单点热点）
+
+
+
+* ​**Leader 职责**​：处理所有读写请求
+* ​**Follower 职责**​：从 Leader 拉取数据，保持同步
+
+---
+
+### 2. **ISR（In-Sync Replicas）机制 —— 一致性保障**
+
+* ​**ISR 集合**​：与 Leader 保持同步的副本列表（默认 10 秒未同步则踢出）
+* ​**acks 配置**​：
+    * `acks=1`：Leader 写成功即返回（可能丢数据）
+    * `acks=all`：​**所有 ISR 副本写成功才返回**​（强一致）
+* ​**HW（High Watermark）**​：已提交消息的最大 offset，Consumer 只能读到 HW
+
+> 💡 ​**故障恢复**​：
+> 若 Leader 宕机，Controller 从 ​**ISR 中选新 Leader**​（保证不丢数据）
+
+---
+
+### 3. **Controller 角色（集群大脑）**
+
+* ​**职责**​：
+    * 监听 Broker 上下线
+    * 触发 Partition Rebalance
+    * 管理 Replica 状态机
+    * 处理 Topic 创建/删除
+* ​**高可用**​：KRaft 模式下，Controller 本身通过 **Raft 协议**实现多副本选举
+
+
+## 对比 MQ 
 ![img.png](img.png)
 
 ## Exactly-Once 端到端

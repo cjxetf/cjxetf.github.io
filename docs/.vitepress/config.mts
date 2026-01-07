@@ -315,7 +315,6 @@ const sidebar = {
             text: "MLOps vs LLMOps",
             link: "/mlops/",
           }
-
         ],
       },
       {
@@ -323,7 +322,10 @@ const sidebar = {
         base: "/programming/rag/",
         collapsed: false,
         items: [
-
+          {
+            text: "Prompt 优化",
+            link: "/prompt1/",
+          },
           {
             text: "RAG 系统优化指南",
             link: "/rag/",

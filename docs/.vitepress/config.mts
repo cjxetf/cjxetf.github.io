@@ -388,6 +388,10 @@ const sidebar = {
           {
             text: "AI 学习伙伴产品三阶段演进路线",
             link: "/aik12/",
+          },
+          {
+            text: "AI 社交五层记忆架构",
+            link: "/aiprompt/",
           }
         ],
       },

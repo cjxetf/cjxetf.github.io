@@ -457,7 +457,7 @@ const sidebar = {
         items: [
           {
             text: "AI 社交内容风控",
-            link: "/danmu/",
+            link: "/aitext/",
           },{
             text: "直播弹幕内容风控方案",
             link: "/danmu/",

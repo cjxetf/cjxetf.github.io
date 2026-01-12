@@ -396,6 +396,10 @@ const sidebar = {
           {
             text: "AI 社交五层记忆架构",
             link: "/aiprompt/",
+          },
+          {
+            text: "AI 社交稳定性建设",
+            link: "/wending/",
           }
         ],
       },

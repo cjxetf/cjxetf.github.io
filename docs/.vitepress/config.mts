@@ -386,6 +386,10 @@ const sidebar = {
             link: "/2/",
           },
           {
+            text: "分部团队项目管理协作思考",
+            link: "/pm/",
+          },
+          {
             text: "AI 学习伙伴产品三阶段演进路线",
             link: "/aik12/",
           },

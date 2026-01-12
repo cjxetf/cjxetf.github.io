@@ -456,8 +456,11 @@ const sidebar = {
         collapsed: false,
         items: [
           {
-            text: "AI 社交内容风控",
+            text: "AI 社交内容风控多层技术体系",
             link: "/aitext/",
+          },{
+            text: "AI 社交内容风控误杀监控优化",
+            link: "/aitext2/",
           },{
             text: "直播弹幕内容风控方案",
             link: "/danmu/",

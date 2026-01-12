@@ -448,6 +448,9 @@ const sidebar = {
         collapsed: false,
         items: [
           {
+            text: "直播弹幕内容风控方案",
+            link: "/danmu/",
+          },{
             text: "知识图谱",
             link: "/tupu/",
           },{

@@ -384,6 +384,10 @@ const sidebar = {
           {
             text: "Spec Coding",
             link: "/2/",
+          },
+          {
+            text: "AI 学习伙伴产品三阶段演进路线",
+            link: "/aik12/",
           }
         ],
       },
@@ -448,6 +452,9 @@ const sidebar = {
         collapsed: false,
         items: [
           {
+            text: "AI 社交内容风控",
+            link: "/danmu/",
+          },{
             text: "直播弹幕内容风控方案",
             link: "/danmu/",
           },{
